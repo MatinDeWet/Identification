@@ -1,10 +1,10 @@
 ﻿namespace Identification.Base.Contracts;
 
-public interface IIdentityInfo<TExternalUserId, TInternalUserId>
+public interface IIdentityInfo
 {
-    TExternalUserId GetExternalUserId();
+    object GetExternalUserId();
 
-    TInternalUserId GetInternalUserId();
+    object GetInternalUserId();
 
     bool IsAdmin();
 
@@ -13,4 +13,11 @@ public interface IIdentityInfo<TExternalUserId, TInternalUserId>
     bool HasValue(string name);
 
     string GetValue(string name);
+}
+
+public interface IIdentityInfo<TExternalUserId, TInternalUserId> : IIdentityInfo
+{
+    new TExternalUserId GetExternalUserId();
+
+    new TInternalUserId GetInternalUserId();
 }

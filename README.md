@@ -35,6 +35,22 @@ services.AddIdentificationSupport<long, int>(options =>
 // Inject IIdentityInfo<long, int>
 ```
 
+You can inject the non-generic interface as well:
+
+```csharp
+using Identification.Base.Contracts;
+
+public sealed class MyService
+{
+	private readonly IIdentityInfo _identityInfo;
+
+	public MyService(IIdentityInfo identityInfo)
+	{
+		_identityInfo = identityInfo;
+	}
+}
+```
+
 Methods on `IIdentityInfo<TExternalUserId, TInternalUserId>`:
 
 - `GetExternalUserId()`

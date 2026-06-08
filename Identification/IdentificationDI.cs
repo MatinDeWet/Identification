@@ -43,6 +43,8 @@ public static class IdentificationDI
         });
 
         services.AddScoped<IIdentityInfo<TExternalUserId, TInternalUserId>, IdentityInfo<TExternalUserId, TInternalUserId>>();
+        services.AddScoped<IIdentityInfo>(
+            sp => sp.GetRequiredService<IIdentityInfo<TExternalUserId, TInternalUserId>>());
         services.AddScoped<IInfoSetter, InfoSetter>();
 
         return services;

@@ -98,4 +98,14 @@ internal class IdentityInfo<TExternalUserId, TInternalUserId> : IIdentityInfo<TE
 
         return _infoSetter.Any(x => x.Type == name);
     }
+
+    object IIdentityInfo.GetExternalUserId()
+    {
+        return GetExternalUserId()!;
+    }
+
+    object IIdentityInfo.GetInternalUserId()
+    {
+        return GetInternalUserId()!;
+    }
 }
