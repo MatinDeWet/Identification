@@ -1,10 +1,10 @@
 ﻿namespace Identification.Base.Contracts;
 
-public interface IIdentityInfo
+public interface IIdentityInfo<TEntraId, TUserId>
 {
-    Guid GetEntraId();
+    TEntraId GetEntraId();
 
-    Guid GetUserId();
+    TUserId GetUserId();
 
     bool IsAdmin();
 
@@ -13,4 +13,8 @@ public interface IIdentityInfo
     bool HasValue(string name);
 
     string GetValue(string name);
+}
+
+public interface IIdentityInfo : IIdentityInfo<Guid, Guid>
+{
 }

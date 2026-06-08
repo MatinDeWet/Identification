@@ -1,40 +1,46 @@
 ﻿using System.Security.Claims;
 using Identification.Base.Constants;
 using Identification.Base.Contracts;
+using Identification.Core.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace Identification.Core.Implementation;
 
-internal sealed class IdentityInfo : IIdentityInfo
+internal class IdentityInfo<TEntraId, TUserId> : IIdentityInfo<TEntraId, TUserId>
 {
     private readonly IInfoSetter _infoSetter;
+    private readonly IdentificationOptions<TEntraId, TUserId> _options;
 
-    public IdentityInfo(IInfoSetter infoSetter)
+    public IdentityInfo(
+        IInfoSetter infoSetter,
+        IOptions<IdentificationOptions<TEntraId, TUserId>> options)
     {
         _infoSetter = infoSetter;
+        _options = options.Value;
     }
 
-    public Guid GetEntraId()
+    public TEntraId GetEntraId()
     {
-        string uid = GetValue(ClaimConstants.EntraId);
+        string uid = GetValue(_options.EntraIdClaimType);
 
-        if (string.IsNullOrWhiteSpace(uid) || !Guid.TryParse(uid, out Guid result))
+        if (string.IsNullOrWhiteSpace(uid))
         {
-            throw new InvalidOperationException("The system identity ID is not set or is not valid.");
+            throw new InvalidOperationException("The Entra ID claim is not set.");
         }
 
-        return result;
+        return _options.EntraIdParser(uid);
     }
 
-    public Guid GetUserId()
+    public TUserId GetUserId()
     {
-        string uid = GetValue(ClaimConstants.UserId);
+        string uid = GetValue(_options.UserIdClaimType);
 
-        if (string.IsNullOrWhiteSpace(uid) || !Guid.TryParse(uid, out Guid result))
+        if (string.IsNullOrWhiteSpace(uid))
         {
-            throw new InvalidOperationException("The system identity ID is not set or is not valid.");
+            throw new InvalidOperationException("The user ID claim is not set.");
         }
 
-        return result;
+        return _options.UserIdParser(uid);
     }
 
     public bool IsAdmin()
@@ -77,5 +83,15 @@ internal sealed class IdentityInfo : IIdentityInfo
         }
 
         return _infoSetter.Any(x => x.Type == name);
+    }
+}
+
+internal sealed class IdentityInfo : IdentityInfo<Guid, Guid>, IIdentityInfo
+{
+    public IdentityInfo(
+        IInfoSetter infoSetter,
+        IOptions<IdentificationOptions<Guid, Guid>> options)
+        : base(infoSetter, options)
+    {
     }
 }
