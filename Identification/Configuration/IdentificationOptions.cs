@@ -1,6 +1,6 @@
 namespace Identification.Core.Configuration;
 
-public sealed class IdentificationOptions<TEntraId, TUserId>
+public sealed class IdentificationOptions<TExternalUserId, TInternalUserId>
 {
     public string ExternalUserIdClaimType { get; set; } = string.Empty;
 
@@ -10,7 +10,7 @@ public sealed class IdentificationOptions<TEntraId, TUserId>
 
     public string AdminRoleValue { get; set; } = string.Empty;
 
-    public Func<string, TEntraId>? ExternalUserIdParser { get; set; }
+    public Func<string, TExternalUserId>? ExternalUserIdParser { get; set; }
 
-    public Func<string, TUserId>? InternalUserIdParser { get; set; }
+    public Func<string, TInternalUserId>? InternalUserIdParser { get; set; }
 }

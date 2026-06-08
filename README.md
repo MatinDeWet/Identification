@@ -4,7 +4,7 @@ A lightweight .NET class library for claim-based identity access and dependency 
 
 ## Features
 
-- Strongly typed identity access via `IIdentityInfo<TEntraId, TUserId>`
+- Strongly typed identity access via `IIdentityInfo<TExternalUserId, TInternalUserId>`
 - Claim storage and update contract via `IInfoSetter`
 - Explicit DI registration with configurable claim names, admin role, and parsers
 
@@ -24,7 +24,7 @@ using Identification.Core;
 
 services.AddIdentificationSupport<long, int>(options =>
 {
-	options.ExternalUserIdClaimType = "entra_id";
+	options.ExternalUserIdClaimType = "external_user_id";
 	options.InternalUserIdClaimType = "user_id";
 	options.RoleClaimType = "role";
 	options.AdminRoleValue = "Admin";
@@ -35,7 +35,7 @@ services.AddIdentificationSupport<long, int>(options =>
 // Inject IIdentityInfo<long, int>
 ```
 
-Methods on `IIdentityInfo<TEntraId, TUserId>`:
+Methods on `IIdentityInfo<TExternalUserId, TInternalUserId>`:
 
 - `GetExternalUserId()`
 - `GetInternalUserId()`

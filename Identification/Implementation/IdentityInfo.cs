@@ -5,20 +5,20 @@ using Microsoft.Extensions.Options;
 
 namespace Identification.Core.Implementation;
 
-internal class IdentityInfo<TEntraId, TUserId> : IIdentityInfo<TEntraId, TUserId>
+internal class IdentityInfo<TExternalUserId, TInternalUserId> : IIdentityInfo<TExternalUserId, TInternalUserId>
 {
     private readonly IInfoSetter _infoSetter;
-    private readonly IdentificationOptions<TEntraId, TUserId> _options;
+    private readonly IdentificationOptions<TExternalUserId, TInternalUserId> _options;
 
     public IdentityInfo(
         IInfoSetter infoSetter,
-        IOptions<IdentificationOptions<TEntraId, TUserId>> options)
+        IOptions<IdentificationOptions<TExternalUserId, TInternalUserId>> options)
     {
         _infoSetter = infoSetter;
         _options = options.Value;
     }
 
-    public TEntraId GetExternalUserId()
+    public TExternalUserId GetExternalUserId()
     {
         string uid = GetValue(_options.ExternalUserIdClaimType);
 
@@ -35,7 +35,7 @@ internal class IdentityInfo<TEntraId, TUserId> : IIdentityInfo<TEntraId, TUserId
         return _options.ExternalUserIdParser(uid);
     }
 
-    public TUserId GetInternalUserId()
+    public TInternalUserId GetInternalUserId()
     {
         string uid = GetValue(_options.InternalUserIdClaimType);
 

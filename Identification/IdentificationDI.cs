@@ -8,13 +8,13 @@ namespace Identification.Core;
 
 public static class IdentificationDI
 {
-    public static IServiceCollection AddIdentificationSupport<TEntraId, TUserId>(
+    public static IServiceCollection AddIdentificationSupport<TExternalUserId, TInternalUserId>(
         this IServiceCollection services,
-        Action<IdentificationOptions<TEntraId, TUserId>> configure)
+        Action<IdentificationOptions<TExternalUserId, TInternalUserId>> configure)
     {
         ArgumentNullException.ThrowIfNull(configure);
 
-        services.AddOptions<IdentificationOptions<TEntraId, TUserId>>()
+        services.AddOptions<IdentificationOptions<TExternalUserId, TInternalUserId>>()
             .Configure(configure)
             .PostConfigure(options =>
         {
@@ -38,11 +38,11 @@ public static class IdentificationDI
                 throw new InvalidOperationException("AdminRoleValue must be configured.");
             }
 
-            options.ExternalUserIdParser ??= ClaimValueParsers.Parse<TEntraId>;
-            options.InternalUserIdParser ??= ClaimValueParsers.Parse<TUserId>;
+            options.ExternalUserIdParser ??= ClaimValueParsers.Parse<TExternalUserId>;
+            options.InternalUserIdParser ??= ClaimValueParsers.Parse<TInternalUserId>;
         });
 
-        services.AddScoped<IIdentityInfo<TEntraId, TUserId>, IdentityInfo<TEntraId, TUserId>>();
+        services.AddScoped<IIdentityInfo<TExternalUserId, TInternalUserId>, IdentityInfo<TExternalUserId, TInternalUserId>>();
         services.AddScoped<IInfoSetter, InfoSetter>();
 
         return services;

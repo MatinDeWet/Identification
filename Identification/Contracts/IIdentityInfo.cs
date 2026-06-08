@@ -1,10 +1,10 @@
 ﻿namespace Identification.Base.Contracts;
 
-public interface IIdentityInfo<TEntraId, TUserId>
+public interface IIdentityInfo<TExternalUserId, TInternalUserId>
 {
-    TEntraId GetExternalUserId();
+    TExternalUserId GetExternalUserId();
 
-    TUserId GetInternalUserId();
+    TInternalUserId GetInternalUserId();
 
     bool IsAdmin();
 
