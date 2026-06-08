@@ -20,7 +20,7 @@ internal class IdentityInfo<TExternalUserId, TInternalUserId> : IIdentityInfo<TE
 
     public TExternalUserId GetExternalUserId()
     {
-        string uid = GetValue(_options.ExternalUserIdClaimType);
+        string uid = GetExternalUserIdValue();
 
         if (string.IsNullOrWhiteSpace(uid))
         {
@@ -37,7 +37,7 @@ internal class IdentityInfo<TExternalUserId, TInternalUserId> : IIdentityInfo<TE
 
     public TInternalUserId GetInternalUserId()
     {
-        string uid = GetValue(_options.InternalUserIdClaimType);
+        string uid = GetInternalUserIdValue();
 
         if (string.IsNullOrWhiteSpace(uid))
         {
@@ -50,6 +50,16 @@ internal class IdentityInfo<TExternalUserId, TInternalUserId> : IIdentityInfo<TE
         }
 
         return _options.InternalUserIdParser(uid);
+    }
+
+    public string GetExternalUserIdValue()
+    {
+        return GetValue(_options.ExternalUserIdClaimType);
+    }
+
+    public string GetInternalUserIdValue()
+    {
+        return GetValue(_options.InternalUserIdClaimType);
     }
 
     public bool IsAdmin()
@@ -99,13 +109,14 @@ internal class IdentityInfo<TExternalUserId, TInternalUserId> : IIdentityInfo<TE
         return _infoSetter.Any(x => x.Type == name);
     }
 
-    object IIdentityInfo.GetExternalUserId()
+    IdentityValue IIdentityInfo.GetExternalUserId()
     {
-        return GetExternalUserId()!;
+        return new IdentityValue(GetExternalUserIdValue());
     }
 
-    object IIdentityInfo.GetInternalUserId()
+    IdentityValue IIdentityInfo.GetInternalUserId()
     {
-        return GetInternalUserId()!;
+        return new IdentityValue(GetInternalUserIdValue());
     }
+
 }

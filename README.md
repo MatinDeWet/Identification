@@ -98,7 +98,21 @@ public sealed class MyService
 	{
 		return _identityInfo.IsAdmin();
 	}
+
+	public long GetExternalId()
+	{
+		long externalId = _identityInfo.GetExternalUserId();
+		return externalId;
+	}
 }
+```
+
+You can also read as other supported types directly:
+
+```csharp
+Guid externalId = identityInfo.GetExternalUserId();
+int internalId = identityInfo.GetInternalUserId();
+string externalIdRaw = identityInfo.GetExternalUserId();
 ```
 
 ## Configuration Reference
@@ -125,8 +139,8 @@ public sealed class MyService
 
 `IIdentityInfo`
 
-- `GetExternalUserId()` returns `object`
-- `GetInternalUserId()` returns `object`
+- `GetExternalUserId()` returns `IdentityValue` (implicitly convertible to `string`, `Guid`, `long`, `int`)
+- `GetInternalUserId()` returns `IdentityValue` (implicitly convertible to `string`, `Guid`, `long`, `int`)
 - `IsAdmin()`
 - `HasRole(string role)`
 - `HasValue(string claimType)`
@@ -137,6 +151,23 @@ public sealed class MyService
 - If claim values are missing or invalid for your parser, methods throw `InvalidOperationException`.
 - Keep your parser functions aligned with the claim formats emitted by your identity provider.
 - Prefer typed interface injection when you want compile-time ID types.
+
+## Compile-Time Safety Without Repeating Generics
+
+If you want compile-time safety and still inject `IIdentityInfo`-style names in your app code, create a global alias in your consuming project:
+
+```csharp
+// GlobalUsings.cs in your application
+global using IIdentityInfo = Identification.Base.Contracts.IIdentityInfo<long, int>;
+```
+
+Then in services/controllers you can use:
+
+```csharp
+private readonly IIdentityInfo _identityInfo;
+```
+
+This keeps compile-time typed IDs while avoiding repeated generic type arguments everywhere.
 
 ## Repository
 

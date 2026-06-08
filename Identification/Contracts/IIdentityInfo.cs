@@ -2,9 +2,9 @@
 
 public interface IIdentityInfo
 {
-    object GetExternalUserId();
+    IdentityValue GetExternalUserId();
 
-    object GetInternalUserId();
+    IdentityValue GetInternalUserId();
 
     bool IsAdmin();
 
