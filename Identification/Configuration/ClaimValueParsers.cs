@@ -2,8 +2,17 @@ using System.Globalization;
 
 namespace Identification.Core.Configuration;
 
+/// <summary>
+/// Parses string claim values into strongly typed values.
+/// </summary>
 public static class ClaimValueParsers
 {
+    /// <summary>
+    /// Parses a claim value into the requested target type.
+    /// </summary>
+    /// <typeparam name="T">The target type.</typeparam>
+    /// <param name="value">The raw claim value.</param>
+    /// <returns>The parsed value.</returns>
     public static T Parse<T>(string value)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(value);

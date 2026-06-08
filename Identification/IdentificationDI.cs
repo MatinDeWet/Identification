@@ -6,8 +6,19 @@ using System.Security.Claims;
 
 namespace Identification.Core;
 
+/// <summary>
+/// Dependency injection registration extensions for Identification services.
+/// </summary>
 public static class IdentificationDI
 {
+    /// <summary>
+    /// Registers Identification services with typed external/internal user IDs.
+    /// </summary>
+    /// <typeparam name="TExternalUserId">The external user identifier type.</typeparam>
+    /// <typeparam name="TInternalUserId">The internal user identifier type.</typeparam>
+    /// <param name="services">The DI service collection.</param>
+    /// <param name="configure">The options configuration callback.</param>
+    /// <returns>The same service collection for chaining.</returns>
     public static IServiceCollection AddIdentificationSupport<TExternalUserId, TInternalUserId>(
         this IServiceCollection services,
         Action<IdentificationOptions<TExternalUserId, TInternalUserId>> configure)
