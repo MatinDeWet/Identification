@@ -2,9 +2,9 @@
 
 public interface IIdentityInfo<TEntraId, TUserId>
 {
-    TEntraId GetEntraId();
+    TEntraId GetExternalUserId();
 
-    TUserId GetUserId();
+    TUserId GetInternalUserId();
 
     bool IsAdmin();
 
@@ -13,8 +13,4 @@ public interface IIdentityInfo<TEntraId, TUserId>
     bool HasValue(string name);
 
     string GetValue(string name);
-}
-
-public interface IIdentityInfo : IIdentityInfo<Guid, Guid>
-{
 }

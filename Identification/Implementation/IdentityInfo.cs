@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using Identification.Base.Constants;
 using Identification.Base.Contracts;
 using Identification.Core.Configuration;
 using Microsoft.Extensions.Options;
@@ -19,33 +18,48 @@ internal class IdentityInfo<TEntraId, TUserId> : IIdentityInfo<TEntraId, TUserId
         _options = options.Value;
     }
 
-    public TEntraId GetEntraId()
+    public TEntraId GetExternalUserId()
     {
-        string uid = GetValue(_options.EntraIdClaimType);
+        string uid = GetValue(_options.ExternalUserIdClaimType);
 
         if (string.IsNullOrWhiteSpace(uid))
         {
-            throw new InvalidOperationException("The Entra ID claim is not set.");
+            throw new InvalidOperationException("The external user ID claim is not set.");
         }
 
-        return _options.EntraIdParser(uid);
+        if (_options.ExternalUserIdParser is null)
+        {
+            throw new InvalidOperationException("ExternalUserIdParser is not configured.");
+        }
+
+        return _options.ExternalUserIdParser(uid);
     }
 
-    public TUserId GetUserId()
+    public TUserId GetInternalUserId()
     {
-        string uid = GetValue(_options.UserIdClaimType);
+        string uid = GetValue(_options.InternalUserIdClaimType);
 
         if (string.IsNullOrWhiteSpace(uid))
         {
-            throw new InvalidOperationException("The user ID claim is not set.");
+            throw new InvalidOperationException("The internal user ID claim is not set.");
         }
 
-        return _options.UserIdParser(uid);
+        if (_options.InternalUserIdParser is null)
+        {
+            throw new InvalidOperationException("InternalUserIdParser is not configured.");
+        }
+
+        return _options.InternalUserIdParser(uid);
     }
 
     public bool IsAdmin()
     {
-        return HasRole(RoleConstants.Admin);
+        if (string.IsNullOrWhiteSpace(_options.AdminRoleValue))
+        {
+            throw new InvalidOperationException("AdminRoleValue is not configured.");
+        }
+
+        return HasRole(_options.AdminRoleValue);
     }
 
     public bool HasRole(string role)
@@ -56,7 +70,7 @@ internal class IdentityInfo<TEntraId, TUserId> : IIdentityInfo<TEntraId, TUserId
         }
 
         IEnumerable<string> roles = _infoSetter
-            .Where(x => x.Type == ClaimTypes.Role)
+            .Where(x => x.Type == _options.RoleClaimType)
             .Select(x => x.Value)
             .Where(x => !string.IsNullOrWhiteSpace(x));
 
@@ -83,15 +97,5 @@ internal class IdentityInfo<TEntraId, TUserId> : IIdentityInfo<TEntraId, TUserId
         }
 
         return _infoSetter.Any(x => x.Type == name);
-    }
-}
-
-internal sealed class IdentityInfo : IdentityInfo<Guid, Guid>, IIdentityInfo
-{
-    public IdentityInfo(
-        IInfoSetter infoSetter,
-        IOptions<IdentificationOptions<Guid, Guid>> options)
-        : base(infoSetter, options)
-    {
     }
 }
