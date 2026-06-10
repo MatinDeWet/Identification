@@ -1,5 +1,9 @@
 # Identification
 
+[![NuGet Version](https://img.shields.io/nuget/v/MatinDeWet.Identification)](https://www.nuget.org/packages/MatinDeWet.Identification)
+[![CI Status](https://img.shields.io/github/actions/workflow/status/MatinDeWet/Identification/CI.yml?branch=master)](https://github.com/MatinDeWet/Identification/actions/workflows/CI.yml)
+[![Publish Status](https://img.shields.io/github/actions/workflow/status/MatinDeWet/Identification/nuget-publish.yml?branch=master)](https://github.com/MatinDeWet/Identification/actions/workflows/nuget-publish.yml)
+
 A lightweight .NET class library for claim-based identity access with configurable ID parsing and simple DI wiring.
 
 ## Features
