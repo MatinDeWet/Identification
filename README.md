@@ -173,6 +173,3 @@ private readonly IIdentityInfo _identityInfo;
 
 This keeps compile-time typed IDs while avoiding repeated generic type arguments everywhere.
 
-## Repository
-
-https://github.com/MatinDeWet/Identification
